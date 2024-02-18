@@ -6,18 +6,26 @@ interface ChatInputProps {
 }
 
 const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState<string>("");
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(event.target.value);
   };
 
   const handleSendMessage = () => {
-    if (message.trim() !== '') {
+    if (message.trim() !== "") {
       onSendMessage(message);
-      setMessage('');
+      setMessage("");
     }
   };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault(); // Prevent the default Enter key behavior (new line)
+      handleSendMessage();
+    }
+  };
+
   return (
     <div className="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0">
       <div className="relative flex">
@@ -47,13 +55,13 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
           placeholder="Write your message!"
           className="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-12 bg-gray-200 rounded-md py-3"
           value={message}
+          onKeyDown={handleKeyDown}
           onChange={handleInputChange}
         />
         <div className="absolute right-0 items-center inset-y-0 hidden sm:flex">
           <button
             type="button"
             className="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none"
-          
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
